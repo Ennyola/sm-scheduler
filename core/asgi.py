@@ -11,6 +11,8 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'sm_scheduler.settings')
-
+if os.environ.get("DEBUG", False):
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.development")
+else:
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.production")
 application = get_asgi_application()

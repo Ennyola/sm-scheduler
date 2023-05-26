@@ -32,7 +32,7 @@ services:
     restart: always
     build: 
       context: .
-    command: celery -A sm_scheduler worker -l info 
+    command: celery -A core worker -l info 
     volumes: 
       - .:/app
     container_name: celery
