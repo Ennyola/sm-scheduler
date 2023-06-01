@@ -5,11 +5,12 @@ body{
 .header{
     position: fixed;
     top: 0;
-    width: 90%;
-    background-color: #1E88E5;
+    width: 93%;
+    background-color: #b5c7d6;
     color: white;
-    margin-left: 10%;
+    margin-left: 7%;
     padding: 10px;
+    box-shadow: #b5c7d6;
 }
 .header-links{
     list-style-type: none;
@@ -27,7 +28,7 @@ body{
 
 .sidebar{
     float: left;
-    min-width: 5%; 
+    min-width: 7%; 
     background-color: #1E88E5;
     color: white;
     z-index: 1;
@@ -38,15 +39,23 @@ body{
 .sidebar-links{
     list-style-type: none;
     margin-top: 50px;
+    padding: 0;
 }
 
 .sidebar-links li{
     margin-top: 40px;
-    /* margin-left: 20px; */
+}
+.sidebar-links li:first-child{
+    margin-top: 0;
 }
 
 .sidebar-links a{
     text-decoration: none;
     color: white;
-    border:2px solid green;
+    display: block;
+    text-align: center;
+    padding: 20px 0px;
+}
+.sidebar-links a:hover{
+    border-right: 4px solid#FF9800;
 }
