@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "scheduler",
     "django_celery_results",
+    "social_media_integration"
 ]
 
 MIDDLEWARE = [
