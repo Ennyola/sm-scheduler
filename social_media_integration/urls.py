@@ -1,9 +1,9 @@
 from django.urls import path
 
-from .views import index
+from .views import manage_accounts, add_accounts
 
-app_name="social_integration"
+app_name = "social_integration"
 urlpatterns = [
-    path("", index, name="add-account"),
-    
+    path("", manage_accounts, name="manage-accounts"),
+    path("add-social-account/", add_accounts, name="add-social-accounts"),
 ]

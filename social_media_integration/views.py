@@ -1,7 +1,12 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .models import SocialMediaAccount
 
 
-def index(request):
-    return render(request, "social_media_integration/social_integration.html")
+def manage_accounts(request):
+    social_accounts = SocialMediaAccount.objects.all()
+    context = {"social_accounts": social_accounts}
+    return render(request, "social_media_integration/manage_accounts.html", context)
+
+def add_accounts(request):
+    return render(request,"social_media_integration/add_social_accounts.html")

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="manage-account">
+        <h5>Manage account</h5>
+        <div class="add-social-button">
+            <a href="">
+                <button>
+                    Add Social Account
+                </button>
+            </a>
+        </div>
+        {% if social_accounts %}
+            <div class="social-accounts">
+
+            </div>  
+        {% else %}
+           <p> You have not linked any Social Account </p>
+        {% endif %}
+        
+
+    </div>
+{% endblock  %}
