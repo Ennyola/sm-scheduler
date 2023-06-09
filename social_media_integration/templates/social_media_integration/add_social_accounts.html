@@ -1,13 +1,42 @@
 {% extends "base.html" %}
 
-{% block "content" %}
+{% load static %}
+
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'social_media_integration/css/main.css' %}">
+{% endblock  %}
+
+{% block content %}
     <div class="add-social-accounts">
         <h5> Add Social Media Accounts </h5>
+        <div class="social-button manage-account">
+            <a href="{% url 'social_integration:manage-accounts' %}">
+                <button>
+                    Manage Social Accounts
+                </button>
+            </a>
+        </div>
         <div>
             <h6>Connect a social media account</h6>
             <div class="social-accounts">
-                
+                <div class="twitter-account">
+                    <span class="plus-icon">+</span>
+                    Twitter
+                </div>
+                <div class="instagram-account">
+                    <span class="plus-icon">+</span>
+                    Instagram
+                </div>
+                <div class="linkedin-account">
+                    <span class="plus-icon">+</span>
+                    Linkedin
+                </div>
+                <div class="facebook-account">
+                    <span class="plus-icon">+</span>
+                    Facebook
+                </div>
             </div>
         </div>
     </div>
-{% endblock `` %}
+{% endblock %}

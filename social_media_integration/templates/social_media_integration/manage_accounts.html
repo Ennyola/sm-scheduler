@@ -3,8 +3,8 @@
 {% block content %}
     <div class="manage-account">
         <h5>Manage account</h5>
-        <div class="add-social-button">
-            <a href="">
+        <div class="social-button add-account">
+            <a href=" {% url 'social_integration:add-social-accounts' %} ">
                 <button>
                     Add Social Account
                 </button>
@@ -12,7 +12,24 @@
         </div>
         {% if social_accounts %}
             <div class="social-accounts">
-
+                <div class="social-accounts">
+                    <div class="twitter-account">
+                        <span class="plus-icon">+</span>
+                        Twitter
+                    </div>
+                    <div class="instagram-account">
+                        <span class="plus-icon">+</span>
+                        Instagram
+                    </div>
+                    <div class="linkedin-account">
+                        <span class="plus-icon">+</span>
+                        Linkedin
+                    </div>
+                    <div class="facebook-account">
+                        <span class="plus-icon">+</span>
+                        Facebook
+                    </div>
+                </div>
             </div>  
         {% else %}
            <p> You have not linked any Social Account </p>
