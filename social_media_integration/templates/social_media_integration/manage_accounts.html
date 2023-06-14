@@ -1,12 +1,13 @@
 {% extends "base.html" %}
 
+{% load static %}
 
 {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'social_media_integration/css/main.css' %}">
 {% endblock  %}
 
 {% block content %}
-    <div class="manage-account">
+    <div class="social-integration manage-account">
         <h5>Manage account</h5>
         <div class="social-button add-account">
             <a href=" {% url 'social_integration:add-social-accounts' %} ">
@@ -16,26 +17,20 @@
             </a>
         </div>
         {% if social_accounts %}
-            <div class="social-accounts">
-                <div class="social-accounts">
-                    <div class="twitter-account">
-                        <span class="plus-icon">+</span>
-                        Twitter
-                    </div>
-                    <div class="instagram-account">
-                        <span class="plus-icon">+</span>
-                        Instagram
-                    </div>
-                    <div class="linkedin-account">
-                        <span class="plus-icon">+</span>
-                        Linkedin
-                    </div>
-                    <div class="facebook-account">
-                        <span class="plus-icon">+</span>
-                        Facebook
-                    </div>
+            <div class="accounts-list">
+                <div class="social-account twitter shadow-sm">
+                    Twitter
                 </div>
-            </div>  
+                <div class="social-account instagram shadow-sm">
+                    Instagram
+                </div>
+                <div class="social-account Linkedin shadow-sm">
+                    Linkedin
+                </div>
+                <div class="social-account Facebook shadow-sm">
+                    Facebook
+                </div>
+            </div>
         {% else %}
            <p> You have not linked any Social Account </p>
         {% endif %}
