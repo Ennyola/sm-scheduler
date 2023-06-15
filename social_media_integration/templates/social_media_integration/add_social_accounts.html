@@ -21,20 +21,23 @@
             <h6>Connect a social media account</h6>
             <div class="accounts-list">
                 <div class="social-account twitter shadow">
-                    <span class="plus-icon">+</span>
-                    Twitter
+                    {% comment %} <form action="" method="POST">
+                        {% csrf_token %}
+                        <span class="plus-icon">+</span>
+                        <input type="submit" value="Twitter">
+                    </form> {% endcomment %}
                 </div>
                 <div class="social-account instagram shadow">
                     <span class="plus-icon">+</span>
-                    Instagram
+                    <a href="">Instagram</a> 
                 </div>
                 <div class="social-account Linkedin shadow">
                     <span class="plus-icon">+</span>
-                    Linkedin
+                    <a href="">Linkedin</a>
                 </div>
                 <div class="social-account Facebook shadow">
                     <span class="plus-icon">+</span>
-                    Facebook
+                    <a href="">Facebook</a>  
                 </div>
             </div>
         </div>
