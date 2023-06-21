@@ -11,8 +11,14 @@ class ManageAccountsView(ListView):
     context_object_name = "social_accounts"
     template_name = "social_media_integration/manage_accounts.html"
 
-class AddAccountsView(TemplateView):
+class AddAccountsView(View):
     template_name = "social_media_integration/add_social_accounts.html"
+    
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+    
+    def post(self, request, *args, **kwargs):
+        pass
 
 
 manage_accounts = ManageAccountsView.as_view()
