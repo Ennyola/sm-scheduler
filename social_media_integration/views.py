@@ -22,7 +22,7 @@ class AddAccountsView(View):
 
     def post(self, request, *args, **kwargs):
         if "twitter" in request.POST:
-            add.delay(20, 34)
+            add.delay(34, 23)
         return redirect("social_integration:add-social-accounts")
 
 
