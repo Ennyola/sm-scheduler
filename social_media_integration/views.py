@@ -5,7 +5,7 @@ from django.views.generic.edit import ProcessFormView
 from django.shortcuts import redirect
 
 from .models import SocialMediaAccount
-from .tasks import add
+from .tasks import connect_twitter, connecticut
 
 
 class ManageAccountsView(ListView):
@@ -22,7 +22,7 @@ class AddAccountsView(View):
 
     def post(self, request, *args, **kwargs):
         if "twitter" in request.POST:
-            add.delay(34, 23)
+           connecticut()
         return redirect("social_integration:add-social-accounts")
 
 
