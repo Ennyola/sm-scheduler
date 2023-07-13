@@ -39,18 +39,17 @@ def get_twitter_access_token(user: USER, oauth_token: str, verifier: str) -> Non
     access_token_url = "https://api.twitter.com/oauth/access_token"
     request_token_url = "https://api.twitter.com/oauth/request_token"
 
-    oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
-    fetch_response = oauth.fetch_request_token(request_token_url)
+    # oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
+    # fetch_response = oauth.fetch_request_token(request_token_url)
 
-    resource_owner_key = fetch_response.get("oauth_token")
-    resource_owner_secret = fetch_response.get("oauth_token_secret")
-    print(resource_owner_key)
-    print(resource_owner_secret)
+    # resource_owner_key = fetch_response.get("oauth_token")
+    # resource_owner_secret = fetch_response.get("oauth_token_secret")
+    # print(resource_owner_key)
+    # print(resource_owner_secret)
     oauth = OAuth1Session(
         consumer_key,
         client_secret=consumer_secret,
-        resource_owner_key=resource_owner_key,
-        resource_owner_secret=resource_owner_secret,
+        resource_owner_key=oauth_token,
         verifier=verifier,
     )
     oauth_tokens = oauth.fetch_access_token(access_token_url)
