@@ -1,10 +1,9 @@
 from django.contrib import admin
 
-from .models import ScheduledPost, SocialMediaAccount
+from .models import ScheduledPost
+
 
 # Register your models here.
-
-
 @admin.register(ScheduledPost)
 class ScheduledPostAdmin(admin.ModelAdmin):
     list_display = (
@@ -15,8 +14,3 @@ class ScheduledPostAdmin(admin.ModelAdmin):
         "scheduled_time",
         "is_published",
     )
-
-
-@admin.register(SocialMediaAccount)
-class SocialMediaAccountAdmin(admin.ModelAdmin):
-    list_display = ("user", "platform", "access_token")

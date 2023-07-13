@@ -23,11 +23,20 @@ def connect_twitter():
 
 
 def get_twitter_authorization_url() -> str:
+    """Gets the request token used to generate access tokens.
+
+    Returns:
+        str: The authorization url the page gets redirected to
+    """
     request_token_url = "https://api.twitter.com/oauth/request_token"
     oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
 
-    # Get request token
-    oauth.fetch_request_token(request_token_url)
+    try:
+        oauth.fetch_request_token(request_token_url)
+    except ValueError:
+        print(
+            "There may have been an issue with the consumer_key or consumer_secret you entered."
+        )
 
     # Get authorization url
     base_authorization_url = "https://api.twitter.com/oauth/authorize"
@@ -37,15 +46,7 @@ def get_twitter_authorization_url() -> str:
 
 def get_twitter_access_token(user: USER, oauth_token: str, verifier: str) -> None:
     access_token_url = "https://api.twitter.com/oauth/access_token"
-    request_token_url = "https://api.twitter.com/oauth/request_token"
 
-    # oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
-    # fetch_response = oauth.fetch_request_token(request_token_url)
-
-    # resource_owner_key = fetch_response.get("oauth_token")
-    # resource_owner_secret = fetch_response.get("oauth_token_secret")
-    # print(resource_owner_key)
-    # print(resource_owner_secret)
     oauth = OAuth1Session(
         consumer_key,
         client_secret=consumer_secret,
@@ -55,11 +56,10 @@ def get_twitter_access_token(user: USER, oauth_token: str, verifier: str) -> Non
     oauth_tokens = oauth.fetch_access_token(access_token_url)
     access_token = oauth_tokens["oauth_token"]
     access_token_secret = oauth_tokens["oauth_token_secret"]
-    print(access_token)
-    print(access_token_secret)
-    # SocialMediaAccount.objects.create(
-    #     user=user,
-    #     platform="twitter",
-    #     access_token=access_token,
-    #     access_token_secret=access_token_secret,
-    # )
+    SocialMediaAccount.objects.create(
+        user=user,
+        platform="twitter",
+        access_token=access_token,
+        access_token_secret=access_token_secret,
+    )
+    
