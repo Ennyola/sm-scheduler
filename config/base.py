@@ -34,7 +34,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "scheduler",
     "django_celery_results",
-    "social_media_integration"
+    "social_media_integration",
 ]
 
 MIDDLEWARE = [
@@ -128,13 +128,14 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CELERY_BROKER_URL = "redis://redis:6379"
 CELERY_RESULT_BACKEND = "django-db"
-# celery setting.
-CELERY_CACHE_BACKEND = "default"
 
-# django setting.
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-        "LOCATION": "my_cache_table",
-    }
-}
+# # celery setting.
+# CELERY_CACHE_BACKEND = "default"
+
+# # django setting.
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+#         "LOCATION": "my_cache_table",
+#     }
+# }

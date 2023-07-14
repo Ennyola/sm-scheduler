@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 
 from .models import SocialMediaAccount
 from .tasks import (
-    connect_twitter,
     get_twitter_authorization_url,
     get_twitter_access_token,
 )
@@ -26,18 +25,21 @@ class AddAccountsView(View):
     def get(self, request, *args, **kwargs):
         twitter_oauth_verifier = request.GET.get("oauth_verifier", None)
         twitter_oauth_token = request.GET.get("oauth_token", None)
-        
+        username = request.user.username
         # If no request has been made to any endpoint.
         if twitter_oauth_verifier is None:
             return render(request, self.template_name)
-        
+
         # Get the twitter oauth verifier
-        get_twitter_access_token(request.user, twitter_oauth_token, twitter_oauth_verifier)
+        get_twitter_access_token.delay(
+            username, twitter_oauth_token, twitter_oauth_verifier
+        )
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
         if "twitter" in request.POST:
-            authorization_url = get_twitter_authorization_url()
+            authorization_url_async_result = get_twitter_authorization_url.delay()
+            authorization_url = authorization_url_async_result.get()
             return redirect(authorization_url)
         return redirect("social_integration:add-social-accounts")
 
