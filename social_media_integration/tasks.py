@@ -56,7 +56,6 @@ def get_twitter_access_token(username: str, oauth_token: str, verifier: str) -> 
         verifier=verifier,
     )
     oauth_tokens = oauth.fetch_access_token(access_token_url)
-    logger.info(oauth_tokens)
     access_token = oauth_tokens["oauth_token"]
     access_token_secret = oauth_tokens["oauth_token_secret"]
     SocialMediaAccount.objects.create(

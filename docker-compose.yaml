@@ -29,6 +29,7 @@ services:
       - db
     
   celery:
+    restart: always
     build: 
       context: .
     command: celery -A config worker -l info 
