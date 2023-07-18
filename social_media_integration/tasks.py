@@ -44,7 +44,7 @@ def get_twitter_authorization_url() -> str:
 
 
 @shared_task
-def get_twitter_access_token(username: str, oauth_token: str, verifier: str) -> None:
+def get_twitter_access_token(username: str, oauth_token: str, verifier: str):
     """Retrieves and saves the tokens to the database"""
 
     access_token_url = "https://api.twitter.com/oauth/access_token"
