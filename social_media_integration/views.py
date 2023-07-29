@@ -3,6 +3,9 @@ from django.views import View
 from django.views.generic import ListView
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
+from django.db.models.query import QuerySet
+from django.http import HttpRequest,HttpResponse
+
 
 from .models import SocialMediaAccount
 from .tasks import (
