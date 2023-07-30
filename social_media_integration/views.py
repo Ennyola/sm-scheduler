@@ -4,7 +4,7 @@ from django.views.generic import ListView
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models.query import QuerySet
-from django.http import HttpRequest,HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
 
 from .models import SocialMediaAccount
@@ -23,7 +23,7 @@ class ManageAccountsView(ListView):
 class AddAccountsView(View):
     template_name = "social_media_integration/add_social_accounts.html"
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs) -> HttpResponse:
         twitter_oauth_verifier = request.GET.get("oauth_verifier", None)
         twitter_oauth_token = request.GET.get("oauth_token", None)
         username = request.user.username
@@ -37,7 +37,7 @@ class AddAccountsView(View):
         )
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
         if "twitter" in request.POST:
             authorization_url_async_result = get_twitter_authorization_url.delay()
             authorization_url = authorization_url_async_result.get()

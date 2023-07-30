@@ -1,11 +1,13 @@
 import os
 import logging
+from typing import Literal
 
 from celery import shared_task
 from requests_oauthlib import OAuth1Session
 from requests_oauthlib.oauth1_session import TokenRequestDenied
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 from .models import SocialMediaAccount
 
@@ -13,9 +15,10 @@ logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 logger = logging.getLogger(__name__)
-USER = get_user_model()
-consumer_key = os.environ.get("API_KEY")
-consumer_secret = os.environ.get("API_KEY_SECRET")
+
+USER: settings.AUTH_USER_MODEL = get_user_model()
+consumer_key: str = os.environ.get("API_KEY")
+consumer_secret: str = os.environ.get("API_KEY_SECRET")
 # Celery tasks
 
 
@@ -26,9 +29,10 @@ def get_twitter_authorization_url() -> str:
     Returns:
         str: The authorization url the page gets redirected to.
     """
-    request_token_url = "https://api.twitter.com/oauth/request_token"
+    request_token_url: Literal[
+        "https://api.twitter.com/oauth/request_token"
+    ] = "https://api.twitter.com/oauth/request_token"
     oauth = OAuth1Session(consumer_key, client_secret=consumer_secret)
-
     # Fetch reqyest token
     try:
         oauth.fetch_request_token(request_token_url)
@@ -55,12 +59,15 @@ def get_twitter_access_token(username: str, oauth_token: str, verifier: str):
         resource_owner_key=oauth_token,
         verifier=verifier,
     )
+
     oauth_tokens = oauth.fetch_access_token(access_token_url)
     access_token = oauth_tokens["oauth_token"]
     access_token_secret = oauth_tokens["oauth_token_secret"]
-    SocialMediaAccount.objects.create(
-        user=user,
-        platform="twitter",
-        access_token=access_token,
-        access_token_secret=access_token_secret,
-    )
+    
+    if not SocialMediaAccount.objects.filter(access_token=access_token).exists():
+        SocialMediaAccount.objects.create(
+            user=user,
+            platform="twitter",
+            access_token=access_token,
+            access_token_secret=access_token_secret,
+        )
