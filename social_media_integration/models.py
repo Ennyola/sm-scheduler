@@ -10,7 +10,7 @@ class SocialMediaAccount(models.Model):
         ("facebook", "Facebook"),
         ("twitter", "Twitter"),
         ("instagram", "Instagram"),
-        ("linkedin", "Linkedin")
+        ("linkedin", "Linkedin"),
     )
 
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
@@ -18,5 +18,5 @@ class SocialMediaAccount(models.Model):
     access_token = models.CharField(max_length=255)
     access_token_secret = models.CharField(max_length=255)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.platform} - {self.user.username}"

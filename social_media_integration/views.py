@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import ListView
@@ -23,7 +25,7 @@ class ManageAccountsView(ListView):
 class AddAccountsView(View):
     template_name = "social_media_integration/add_social_accounts.html"
 
-    def get(self, request, *args, **kwargs) -> HttpResponse:
+    def get(self, request: HttpRequest, *args:tuple[str], **kwargs:dict[str,Any]) -> HttpResponse:
         twitter_oauth_verifier = request.GET.get("oauth_verifier", None)
         twitter_oauth_token = request.GET.get("oauth_token", None)
         username = request.user.username
@@ -37,7 +39,7 @@ class AddAccountsView(View):
         )
         return render(request, self.template_name)
 
-    def post(self, request, *args, **kwargs) -> HttpResponseRedirect:
+    def post(self, request: HttpRequest, *args:tuple[str], **kwargs:dict[str,Any]) -> HttpResponseRedirect:
         if "twitter" in request.POST:
             authorization_url_async_result = get_twitter_authorization_url.delay()
             authorization_url = authorization_url_async_result.get()

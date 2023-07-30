@@ -16,7 +16,7 @@ class ScheduledPost(models.Model):
     scheduled_time = models.DateTimeField()
     is_published = models.BooleanField(default=False)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user.username} - {self.content[:50]}"
 
     class Meta:
