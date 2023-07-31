@@ -18,18 +18,11 @@
         </div>
         {% if social_accounts %}
             <div class="accounts-list">
-                <div class="social-account twitter shadow-sm">
-                    Twitter
-                </div>
-                <div class="social-account instagram shadow-sm">
-                    Instagram
-                </div>
-                <div class="social-account Linkedin shadow-sm">
-                    Linkedin
-                </div>
-                <div class="social-account Facebook shadow-sm">
-                    Facebook
-                </div>
+                {% for social_account in social_accounts  %}
+                    <div class="social-account {{social_account.platform}} shadow-sm">
+                        {{social_account.platform}}
+                    </div>
+                {% endfor %}
             </div>
         {% else %}
            <p> You have not linked any Social Account </p>

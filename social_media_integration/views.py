@@ -17,18 +17,24 @@ from .tasks import (
 
 
 class ManageAccountsView(ListView):
-    queryset = SocialMediaAccount.objects.all()
+    queryset: QuerySet[SocialMediaAccount] = SocialMediaAccount.objects.all()
     context_object_name = "social_accounts"
     template_name = "social_media_integration/manage_accounts.html"
+    
+    def get_queryset(self) -> QuerySet[SocialMediaAccount]:
+        return super().get_queryset().filter(user=self.request.user)
 
 
 class AddAccountsView(View):
     template_name = "social_media_integration/add_social_accounts.html"
 
-    def get(self, request: HttpRequest, *args:tuple[str], **kwargs:dict[str,Any]) -> HttpResponse:
+    def get(
+        self, request: HttpRequest, *args: tuple[str], **kwargs: dict[str, Any]
+    ) -> HttpResponse:
         twitter_oauth_verifier = request.GET.get("oauth_verifier", None)
         twitter_oauth_token = request.GET.get("oauth_token", None)
         username = request.user.username
+        
         # If no request has been made to any endpoint.
         if twitter_oauth_verifier is None:
             return render(request, self.template_name)
@@ -39,7 +45,9 @@ class AddAccountsView(View):
         )
         return render(request, self.template_name)
 
-    def post(self, request: HttpRequest, *args:tuple[str], **kwargs:dict[str,Any]) -> HttpResponseRedirect:
+    def post(
+        self, request: HttpRequest, *args: tuple[str], **kwargs: dict[str, Any]
+    ) -> HttpResponseRedirect:
         if "twitter" in request.POST:
             authorization_url_async_result = get_twitter_authorization_url.delay()
             authorization_url = authorization_url_async_result.get()
