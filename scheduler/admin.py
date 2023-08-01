@@ -6,7 +6,7 @@ from .models import ScheduledPost
 # Register your models here.
 @admin.register(ScheduledPost)
 class ScheduledPostAdmin(admin.ModelAdmin):
-    list_display = (
+    list_display: tuple[str] = (
         "user",
         "social_media_account",
         "content",
