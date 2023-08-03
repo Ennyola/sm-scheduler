@@ -1,6 +1,7 @@
 import os
 import logging
 from typing import Literal, Optional, Any, TypedDict
+from dataclasses import dataclass
 
 from celery import shared_task
 from requests_oauthlib import OAuth1Session
@@ -16,11 +17,11 @@ from .models import SocialMediaAccount
 # logger: logging.Logger = logging.getLogger(__name__)
 
 USER: type[User] = get_user_model()
-consumer_key: Optional[str] = os.environ.get("API_KEY")
-consumer_secret: Optional[str] = os.environ.get("API_KEY_SECRET")
+CONSUMER_KEY: Optional[str] = os.environ.get("API_KEY")
+CONSUMER_SECRET: Optional[str] = os.environ.get("API_KEY_SECRET")
 
-
-class TwitterProfileInfo(TypedDict):
+@dataclass
+class TwitterProfileInfo:
     """
 
     Args:
@@ -45,7 +46,7 @@ def get_twitter_authorization_url() -> str:
     request_token_url: Literal[
         "https://api.twitter.com/oauth/request_token"
     ] = "https://api.twitter.com/oauth/request_token"
-    oauth: OAuth1Session = OAuth1Session(consumer_key, client_secret=consumer_secret)
+    oauth: OAuth1Session = OAuth1Session(CONSUMER_KEY, client_secret=CONSUMER_SECRET)
 
     # Fetch request token
     try:
@@ -62,19 +63,29 @@ def get_twitter_authorization_url() -> str:
 
 
 @shared_task
-def get_twitter_userprofiles(username: str) -> list[TwitterProfileInfo]:
+def get_twitter_userprofile(
+    access_token: str, access_token_secret: str
+) -> TwitterProfileInfo:
+    """
+    Args:
+        access_token (str): _description_
+        access_token_secret (str): _description_
+
+    Returns:
+        TwitterProfileInfo: _description_
+    """
+
     oauth: OAuth1Session = OAuth1Session(
-        consumer_key,
-        client_secret=consumer_secret,
-        resource_owner_key=account.access_token,
-        resource_owner_secret=account.access_token_secret,
+        CONSUMER_KEY,
+        client_secret=CONSUMER_SECRET,
+        resource_owner_key=access_token,
+        resource_owner_secret=access_token_secret,
     )
     profile: TwitterProfileInfo = oauth.get(
         "https://api.twitter.com/2/users/me",
         params={"user.fields": "profile_image_url,name,username"},
     ).json()
-    profiles.append(profile)
-    return profiles
+    return profile
 
 
 @shared_task
@@ -88,17 +99,19 @@ def get_twitter_access_token(username: str, oauth_token: str, verifier: str) -> 
 
     # Get the access token
     oauth: OAuth1Session = OAuth1Session(
-        consumer_key,
-        client_secret=consumer_secret,
+        CONSUMER_KEY,
+        client_secret=CONSUMER_SECRET,
         resource_owner_key=oauth_token,
         verifier=verifier,
     )
     oauth_tokens = oauth.fetch_access_token(access_token_url)
-    
+
     access_token = oauth_tokens["oauth_token"]
     access_token_secret = oauth_tokens["oauth_token_secret"]
 
-    
+    #
+    twitter_profile = get_twitter_userprofile(access_token, access_token_secret)
+
     if not SocialMediaAccount.objects.filter(access_token=access_token).exists():
         SocialMediaAccount.objects.create(
             user=user,
