@@ -21,8 +21,8 @@ class SocialMediaAccount(models.Model):
     name = models.CharField(max_length=250)
     # Username on a specific social account.
     username = models.CharField(max_length=250)
-    # The django user associated with this account.
     profile_picture_url = models.URLField(max_length=500)
+    # The django user associated with this account.
     user = models.ForeignKey(USER, on_delete=models.CASCADE)
 
     def __str__(self) -> str:

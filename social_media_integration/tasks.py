@@ -20,15 +20,11 @@ USER: type[User] = get_user_model()
 CONSUMER_KEY: Optional[str] = os.environ.get("API_KEY")
 CONSUMER_SECRET: Optional[str] = os.environ.get("API_KEY_SECRET")
 
+
 @dataclass
 class TwitterProfileInfo:
-    """
+    """A dataclass containing fields derived when an api request is made to get twitter user profile"""
 
-    Args:
-        TypedDict (_type_): _description_
-    """
-
-    id: str
     name: str
     username: str
     profile_image_url: str
@@ -64,35 +60,48 @@ def get_twitter_authorization_url() -> str:
 
 @shared_task
 def get_twitter_userprofile(
-    access_token: str, access_token_secret: str
-) -> TwitterProfileInfo:
-    """
+    username: str, access_token: str, access_token_secret: str
+) -> None:
+    """Retrieves the user's twitter info and saves it to the database
     Args:
+        username (str): The django username of the user making the request
         access_token (str): _description_
         access_token_secret (str): _description_
-
-    Returns:
-        TwitterProfileInfo: _description_
     """
 
+    user = USER.objects.get(username=username)
     oauth: OAuth1Session = OAuth1Session(
         CONSUMER_KEY,
         client_secret=CONSUMER_SECRET,
         resource_owner_key=access_token,
         resource_owner_secret=access_token_secret,
     )
-    profile: TwitterProfileInfo = oauth.get(
+    # Fetch twitter user profile
+    response = oauth.get(
         "https://api.twitter.com/2/users/me",
         params={"user.fields": "profile_image_url,name,username"},
     ).json()
-    return profile
+    profile: TwitterProfileInfo = TwitterProfileInfo(
+        name=response["data"]["name"],
+        username=response["data"]["username"],
+        profile_image_url=response["data"]["profile_image_url"],
+    )
+    if not SocialMediaAccount.objects.filter(access_token=access_token).exists():
+        SocialMediaAccount.objects.create(
+            user=user,
+            platform="twitter",
+            access_token=access_token,
+            access_token_secret=access_token_secret,
+            name=profile.name,
+            username=profile.username,
+            profile_picture_url=profile.profile_image_url,
+        )
 
 
 @shared_task
 def get_twitter_access_token(username: str, oauth_token: str, verifier: str) -> None:
     """Retrieves and saves the tokens to the database"""
 
-    user = USER.objects.get(username=username)
     access_token_url: Literal[
         "https://api.twitter.com/oauth/access_token"
     ] = "https://api.twitter.com/oauth/access_token"
@@ -109,13 +118,5 @@ def get_twitter_access_token(username: str, oauth_token: str, verifier: str) -> 
     access_token = oauth_tokens["oauth_token"]
     access_token_secret = oauth_tokens["oauth_token_secret"]
 
-    #
-    twitter_profile = get_twitter_userprofile(access_token, access_token_secret)
-
-    if not SocialMediaAccount.objects.filter(access_token=access_token).exists():
-        SocialMediaAccount.objects.create(
-            user=user,
-            platform="twitter",
-            access_token=access_token,
-            access_token_secret=access_token_secret,
-        )
+    # Retrieves the user's twitter info and saves it to the database.
+    get_twitter_userprofile.delay(username, access_token, access_token_secret)
