@@ -1,6 +1,6 @@
 import os
 import logging
-from typing import Literal, Optional, Any, TypedDict
+from typing import Literal, Optional, Any
 from dataclasses import dataclass
 
 from celery import shared_task
@@ -8,6 +8,7 @@ from requests_oauthlib import OAuth1Session
 
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from .models import SocialMediaAccount
 
@@ -86,7 +87,10 @@ def get_twitter_userprofile(
         username=response["data"]["username"],
         profile_image_url=response["data"]["profile_image_url"],
     )
-    if not SocialMediaAccount.objects.filter(access_token=access_token).exists():
+    # Check to confirm if a user with a certain twitter account has been saved together
+    if not SocialMediaAccount.objects.filter(
+        Q(access_token=access_token) & Q(user__username=username)
+    ).exists():
         SocialMediaAccount.objects.create(
             user=user,
             platform="twitter",
