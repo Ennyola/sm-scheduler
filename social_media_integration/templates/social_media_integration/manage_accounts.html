@@ -19,12 +19,22 @@
         {% if social_accounts %}
             <div class="accounts-list">
                 {% for social_account in social_accounts  %}
-                    <div class="social-account {{social_account.platform}} shadow-sm">
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        {{social_account.platform}}
-                    </div>
+                    {% if social_account.platform == "twitter" %}
+                        <div class="social-account {{ social_account.platform }} shadow-sm">
+                            <div class="account-info">
+                                <img src="{{ social_account.profile_picture_url }}" alt="">
+                                <span>
+                                    <p> {{ social_account.name }} </p>
+                                    <p>{{ social_account.platform }}</p>
+                                </span> 
+                            </div>
+                            <div>
+                                <form action="" method="post">
+                                    <p>Remove account</p>
+                                </form>
+                            </div> 
+                        </div>
+                    {% endif %}
                 {% endfor %}
             </div>
         {% else %}
